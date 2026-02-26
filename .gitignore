@@ -1,1 +1,47 @@
+# Системные файлы 
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+*.swp
+*.swo
+*~
 
+# Временные файлы редакторов
+.vscode/
+.idea/
+*.iml
+*.sublime-*
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.temp
+*.cache
+
+# Файлы Camunda (бэкапы)
+*.bak
+*.bpmn.bak
+
+# Архивы и сборки 
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# Секреты и ключи (НИКОГДА не коммитить!)
+.env
+.env.local
+*.key
+*.pem
+secrets.*
+
+# Папки с зависимостями (если появятся)
+node_modules/
+vendor/
+venv/
+__pycache__/
+*.pyc
+
+# Файлы конкретно этого проекта
+.DS_Store
