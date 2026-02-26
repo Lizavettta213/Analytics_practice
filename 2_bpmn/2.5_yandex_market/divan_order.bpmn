@@ -1,1 +1,187 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.44.0">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_Logistics" name="Склад и Логистика">
+        <bpmn:flowNodeRef>Task_TransferToCourier</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Deliver</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Vendor" name="Продавец (магазин)">
+        <bpmn:flowNodeRef>Task_ReceiveOrderFromMarket</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1bp2qoa</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Market" name="Яндекс Маркет (исполнитель)">
+        <bpmn:flowNodeRef>Task_CheckAvailability</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReserveItem</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SendToVendor</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Available</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Customer" name="Покупатель">
+        <bpmn:flowNodeRef>Task_ReceiveOrder</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_Start</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_End</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Event_Start" name="Появилась потребность в диване">
+      <bpmn:outgoing>Flow_StartToCheck</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_StartToCheck" sourceRef="Event_Start" targetRef="Task_CheckAvailability" />
+    <bpmn:task id="Task_CheckAvailability" name="Проверить наличие у продавца">
+      <bpmn:incoming>Flow_StartToCheck</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckToGateway</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_CheckToGateway" sourceRef="Task_CheckAvailability" targetRef="Gateway_Available" />
+    <bpmn:exclusiveGateway id="Gateway_Available" name="Есть ли товар?" default="Flow_AvailableYes">
+      <bpmn:incoming>Flow_CheckToGateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_AvailableYes</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_AvailableYes" name="Да" sourceRef="Gateway_Available" targetRef="Task_ReserveItem" />
+    <bpmn:task id="Task_ReserveItem" name="Положить товар в корзину">
+      <bpmn:incoming>Flow_AvailableYes</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReserveToSend</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_ReserveToSend" sourceRef="Task_ReserveItem" targetRef="Task_SendToVendor" />
+    <bpmn:task id="Task_SendToVendor" name="Передать заказ продавцу">
+      <bpmn:incoming>Flow_ReserveToSend</bpmn:incoming>
+      <bpmn:outgoing>Flow_SendToReceive</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_SendToReceive" sourceRef="Task_SendToVendor" targetRef="Task_ReceiveOrderFromMarket" />
+    <bpmn:task id="Task_ReceiveOrderFromMarket" name="Получить заказ от Яндекс.Маркета">
+      <bpmn:incoming>Flow_SendToReceive</bpmn:incoming>
+      <bpmn:outgoing>Flow_ReceiveToSub</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_ReceiveToSub" sourceRef="Task_ReceiveOrderFromMarket" targetRef="Activity_1bp2qoa" />
+    <bpmn:task id="Task_TransferToCourier" name="Передать заказ курьеру">
+      <bpmn:incoming>Flow_13t51r0</bpmn:incoming>
+      <bpmn:outgoing>Flow_TransferToDeliver</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_TransferToDeliver" sourceRef="Task_TransferToCourier" targetRef="Task_Deliver" />
+    <bpmn:task id="Task_Deliver" name="Доставить диван покупателю">
+      <bpmn:incoming>Flow_TransferToDeliver</bpmn:incoming>
+      <bpmn:outgoing>Flow_DeliverToReceive</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_DeliverToReceive" sourceRef="Task_Deliver" targetRef="Task_ReceiveOrder" />
+    <bpmn:task id="Task_ReceiveOrder" name="Получить заказ">
+      <bpmn:incoming>Flow_DeliverToReceive</bpmn:incoming>
+      <bpmn:outgoing>Flow_03ekukj</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="Event_End" name="Заказ получен">
+      <bpmn:incoming>Flow_03ekukj</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Activity_1bp2qoa" name="Собрать диван">
+      <bpmn:incoming>Flow_ReceiveToSub</bpmn:incoming>
+      <bpmn:outgoing>Flow_13t51r0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_13t51r0" sourceRef="Activity_1bp2qoa" targetRef="Task_TransferToCourier" />
+    <bpmn:sequenceFlow id="Flow_03ekukj" sourceRef="Task_ReceiveOrder" targetRef="Event_End" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="Lane_Logistics_di" bpmnElement="Lane_Logistics" isHorizontal="true">
+        <dc:Bounds x="160" y="410" width="1200" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Vendor_di" bpmnElement="Lane_Vendor" isHorizontal="true">
+        <dc:Bounds x="160" y="290" width="1200" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Market_di" bpmnElement="Lane_Market" isHorizontal="true">
+        <dc:Bounds x="160" y="170" width="1200" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Customer_di" bpmnElement="Lane_Customer" isHorizontal="true">
+        <dc:Bounds x="160" y="50" width="1200" height="120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_Start_di" bpmnElement="Event_Start">
+        <dc:Bounds x="210" y="90" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="191" y="126" width="75" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CheckAvailability_di" bpmnElement="Task_CheckAvailability">
+        <dc:Bounds x="310" y="200" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Available_di" bpmnElement="Gateway_Available" isMarkerVisible="true">
+        <dc:Bounds x="460" y="210" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="450" y="250" width="61" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReserveItem_di" bpmnElement="Task_ReserveItem">
+        <dc:Bounds x="560" y="200" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SendToVendor_di" bpmnElement="Task_SendToVendor">
+        <dc:Bounds x="710" y="200" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReceiveOrderFromMarket_di" bpmnElement="Task_ReceiveOrderFromMarket">
+        <dc:Bounds x="210" y="320" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_TransferToCourier_di" bpmnElement="Task_TransferToCourier">
+        <dc:Bounds x="220" y="450" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Deliver_di" bpmnElement="Task_Deliver">
+        <dc:Bounds x="550" y="450" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReceiveOrder_di" bpmnElement="Task_ReceiveOrder">
+        <dc:Bounds x="963" y="78" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_End_di" bpmnElement="Event_End">
+        <dc:Bounds x="1212" y="90" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1192" y="126" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0s0vz4o" bpmnElement="Activity_1bp2qoa">
+        <dc:Bounds x="570" y="310" width="100" height="60" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_StartToCheck_di" bpmnElement="Flow_StartToCheck">
+        <di:waypoint x="246" y="108" />
+        <di:waypoint x="360" y="108" />
+        <di:waypoint x="360" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CheckToGateway_di" bpmnElement="Flow_CheckToGateway">
+        <di:waypoint x="410" y="230" />
+        <di:waypoint x="460" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_AvailableYes_di" bpmnElement="Flow_AvailableYes">
+        <di:waypoint x="500" y="230" />
+        <di:waypoint x="560" y="230" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="524" y="205" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ReserveToSend_di" bpmnElement="Flow_ReserveToSend">
+        <di:waypoint x="660" y="230" />
+        <di:waypoint x="710" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_SendToReceive_di" bpmnElement="Flow_SendToReceive">
+        <di:waypoint x="760" y="260" />
+        <di:waypoint x="760" y="300" />
+        <di:waypoint x="260" y="300" />
+        <di:waypoint x="260" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ReceiveToSub_di" bpmnElement="Flow_ReceiveToSub">
+        <di:waypoint x="310" y="340" />
+        <di:waypoint x="570" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_TransferToDeliver_di" bpmnElement="Flow_TransferToDeliver">
+        <di:waypoint x="320" y="480" />
+        <di:waypoint x="550" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DeliverToReceive_di" bpmnElement="Flow_DeliverToReceive">
+        <di:waypoint x="650" y="480" />
+        <di:waypoint x="870" y="480" />
+        <di:waypoint x="870" y="108" />
+        <di:waypoint x="963" y="108" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13t51r0_di" bpmnElement="Flow_13t51r0">
+        <di:waypoint x="620" y="370" />
+        <di:waypoint x="620" y="430" />
+        <di:waypoint x="270" y="430" />
+        <di:waypoint x="270" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03ekukj_di" bpmnElement="Flow_03ekukj">
+        <di:waypoint x="1063" y="108" />
+        <di:waypoint x="1212" y="108" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
