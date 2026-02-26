@@ -1,1 +1,43 @@
+@startuml
+title Процесс оплаты заказа с кэшбэком (Тинькофф)
 
+actor Покупатель as user
+participant "Мобильное приложение" as app
+participant "Бэкенд Маркета" as backend
+participant "Платежный шлюз Тинькофф" as tinkoff
+database "БД бонусов" as bonusdb
+
+== Инициация платежа ==
+user -> app: 1. Нажать «Оплатить»
+app -> backend: 2. Запрос на создание платежа
+backend -> tinkoff: 3. Инициировать платеж
+tinkoff --> backend: 4. ID транзакции + ссылка
+backend --> app: 5. Перенаправить на оплату
+
+group Оплата картой
+    loop 3 раза [Попытки ввода CVV]
+        user -> app: 6. Ввести данные карты
+        app -> tinkoff: 7. Отправить платежные данные
+        alt Успешная оплата
+            tinkoff --> app: 8. Статус: SUCCESS
+            app -> backend: 9. Подтверждение оплаты
+        else Ошибка
+            tinkoff --> app: 8. Статус: FAILED
+            note right
+                Неверный CVV,
+                недостаточно средств
+            end note
+        end
+    end
+end
+
+== Начисление кэшбэка ==
+opt Сумма > 1000 ₽
+    backend -> bonusdb: 10. Начислить бонусы
+    bonusdb --> backend: 11. Баланс обновлен
+    backend --> app: 12. Показать кэшбэк
+end
+
+== Завершение ==
+user <- app: 13. Чек и статус доставки
+@enduml
