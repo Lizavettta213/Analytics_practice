@@ -5,7 +5,7 @@
 
 **Корневая папка:** `Analytics_practice/`
 
-📦 Analytics_practice
+**📦 Analytics_practice
 ┣ 📂 1_uml_diagrams
 ┃ ┣ 📂 1.3_shop_sequence
 ┃ ┃ ┣ 📜 diagram.puml
@@ -20,7 +20,7 @@
 ┃ ┣ 📜 divan_order.bpmn
 ┃ ┗ 🖼️ divan_order.png
 ┣ 📜 .gitignore
-┗ 📜 README.md
+┗ 📜 README.md**
 
 ---
 
