@@ -5,6 +5,23 @@
 
 **Корневая папка:** `Analytics_practice/`
 
+📦 Analytics_practice
+┣ 📂 1_uml_diagrams
+┃ ┣ 📂 1.3_shop_sequence
+┃ ┃ ┣ 📜 diagram.puml
+┃ ┃ ┗ 🖼️ diagram.png
+┃ ┗ 📂 1.4_custom_scenario
+┃ ┣ 📜 payment.puml
+┃ ┗ 🖼️ payment.png
+┣ 📂 2_bpmn
+┃ ┣ 📂 2.1_definition
+┃ ┃ ┗ 📜 README.md
+┃ ┗ 📂 2.5_yandex_market
+┃ ┣ 📜 divan_order.bpmn
+┃ ┗ 🖼️ divan_order.png
+┣ 📜 .gitignore
+┗ 📜 README.md
+
 ---
 
 ## 🛒 1. UML: Диаграммы последовательности
