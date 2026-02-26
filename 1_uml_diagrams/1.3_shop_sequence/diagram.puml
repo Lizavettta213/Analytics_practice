@@ -1,0 +1,41 @@
+@startuml
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+title Процесс заказа в интернет-магазине
+
+actor Клиент as client
+participant "Интернет-магазин" as store
+participant "Склад" as warehouse
+participant "Платежная система" as payment
+
+== Аутентификация ==
+opt Авторизация
+    client -> store: 1. Ввести логин и пароль
+    store -> store: 2. Аутентификация клиента
+    store --> client: 3. Ответ об успешной аутентификации
+end
+
+== Просмотр товара ==
+client -> store: 4. Нажать на карточку товара
+store -> warehouse: 5. Запрос наличия товара
+warehouse --> store: 6. Ответ (есть/нет)
+
+alt Товар в наличии
+    client -> store: 7. Открыть карточку товара
+    client -> store: 8. Положить товар в корзину
+    
+    store -> warehouse: 9. Запрос на резервирование
+    warehouse -> warehouse: 10. Зарезервировать товар
+    warehouse --> store: 11. Ответ (резерв подтвержден)
+    
+    store -> payment: 12. Создать черновик платежа
+    payment -> payment: 13. Создать черновик
+    payment --> store: 14. Ответ (ID черновика)
+    
+    client -> store: 15. Открыть корзину
+    
+else Товара нет в наличии
+    store -> client: 16. Уведомление: товар закончился
+    store -> client: 17. Отправить уведомление
+end
+@enduml
