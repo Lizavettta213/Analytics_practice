@@ -1,30 +1,9 @@
 # Аналитика процессов: UML + BPMN 
 
 ---
+## 🗂 Структура репозитория
 
-Analytics_practice/
-│
-├── 1_uml_diagrams/                           # Раздел 1: UML диаграммы
-│   │
-│   ├── 1.3_shop_sequence/                    # Задание 1.3 — перерисованная диаграмма
-│   │   ├── diagram.puml                      # Исходник PlantUML
-│   │   └── diagram.png                        # Готовая диаграмма
-│   │
-│   └── 1.4_custom_scenario/                   # Задание 1.4 — авторская диаграмма
-│       ├── payment.puml                        # Исходник с 3+ фреймами
-│       └── payment.png                          # Визуализация процесса оплаты с кэшбэком
-│
-├── 2_bpmn/                                     # Раздел 2: BPMN моделирование
-│   │
-│   ├── 2.1_definition/                          # Задание 2.1 — теория
-│   │   └── README.md                             # Определение БП и 3 примера из разных сфер
-│   │
-│   └── 2.5_yandex_market/                        # Задание 2.5 — практический кейс
-│       ├── divan_order.bpmn                       # Файл Camunda Modeler
-│       └── divan_order.png                         # Скриншот BPMN-диаграммы
-│
-├── .gitignore                                    # Служебный файл Git
-└── README.md                                     # Основной файл
+**Корневая папка:** `Analytics_practice/`
 
 ---
 
